@@ -1,5 +1,6 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -16,8 +17,10 @@ app.post('/api/scrape-price', async (req, res) => {
   try {
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
+
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
@@ -38,9 +41,9 @@ app.post('/api/scrape-price', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Puppeteer Price Scraper is running');
+  res.send('✅ Puppeteer TCG Scraper is running!');
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`🚀 Server running at http://localhost:${port}`);
 });
